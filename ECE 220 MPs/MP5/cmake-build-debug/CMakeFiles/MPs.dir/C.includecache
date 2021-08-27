@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/Devul Nahar/OneDrive - University of Illinois - Urbana/Documents/UIUC/Year 1/Semester 2/2. ECE 220/MPs/MP5/main.c
+stdio.h
+-
+string.h
+-
+prog5.h
+C:/Users/Devul Nahar/OneDrive - University of Illinois - Urbana/Documents/UIUC/Year 1/Semester 2/2. ECE 220/MPs/MP5/prog5.h
+
+C:/Users/Devul Nahar/OneDrive - University of Illinois - Urbana/Documents/UIUC/Year 1/Semester 2/2. ECE 220/MPs/MP5/prog5.h
+string.h
+-
+
