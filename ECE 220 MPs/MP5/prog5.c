@@ -1,3 +1,15 @@
+/*
+ * We have written the set_seed function which checks if the input seed is a single digit number
+ * and then sets the seed. The second function start_game selects 4 random words from the pool of 
+ * available words and makes a solution set. It also initializes a few global variables. The make_guesss
+ * function checks the validity of the string entered by the user and then evalutes it by giving the number
+ * of perfect and mistplaced matches. Also keeps record of number of guesses and a few other global variables.
+ * 
+ * partners: danahar2, sg49
+*/
+
+
+
 /*      
  *
  * prog5.c - source file adapted from UIUC ECE198KL Spring 2013 Program 4
@@ -86,10 +98,15 @@ int set_seed (const char seed_str[]) {
 //    You may need to change the return statement below
     int seed;
     char post[2];
+
+    //return if we get not exactly 1 input
     if (sscanf (seed_str, "%d%1s", &seed, post) != 1) {
         printf("set_seed: invalid seed\n");
         return 0;
     }
+
+    //set seed as the input is valid
+    srand (seed);
     return 1;
 }
 
@@ -108,11 +125,18 @@ int set_seed (const char seed_str[]) {
  * SIDE EFFECTS: records the solution in the static solution variables for use by make_guess, set guess_number
  */
 void start_game () {
+
+    //Loop 4 times because we have to select 4 words
     for(int i = 0; i < 4; i++){
+
+        //get a random value
         int idx = rand()%8;
+
+        //copy the word to solutions
         strcpy(solutions[i], pool[idx]);
     }
 
+    //initializing global variables
     guess_number = 1;
     max_score = -1;
 }
@@ -137,61 +161,85 @@ void start_game () {
  *               (NOTE: the output format MUST MATCH EXACTLY, check the wiki writeup)
  */
 int make_guess (const char guess_str[]) {
-    char user_guesses[4][10];
-    int match_found;
 
-    if(sscanf(guess_str, "%s %s %s %s", user_guesses[0], user_guesses[1], user_guesses[2], user_guesses[3]) != 4) {
+    //creating a 2D char array to store the words user guessed 
+    char user_guesses[4][10];
+    char userGuess5[4];
+
+    //returning if the usr input string does not contain exactly 4 words
+    if(sscanf(guess_str, "%s %s %s %s %s", user_guesses[0], user_guesses[1], user_guesses[2], user_guesses[3],userGuess5) != 4) {
         printf("make_guess: invalid guess\n");
         return 0;
     }
-
-    for (int i = 0; i < 4; i++) {
-        match_found = 0;
-        for(int j = 0; j < 8; j++) {
-            if(strcmp(user_guesses[i], pool[j]) == 0) {
-                match_found = 1;
-                break;
-            }
-        }
-        if (match_found == 0) {
-            printf("make_guess: invalid guess\n");
-            return 0;
-        }
+    
+    //checking if the 4 words entered by the user belong to the pool, else returning
+    for(int k = 0; k < 4; k++){
+    	if(is_valid(user_guesses[k]) == 0){
+           printf("make_guess: invalid guess\n");
+    	   return 0;
+    	}
     }
 
+    //incrementing the guess attempt
     guess_number++;
+
+    //initializing the number of perfect and misplaced matches counter
     int perfect = 0;
     int misplaced = 0;
 
-    int solMatched[4];
-    int userMatched[4];
+    //initializing 2 more arrays to mark the inputs that have been checked already to avoid double counting
+    int solMatched[4] = {0, 0, 0, 0};
+    int userMatched[4] = {0, 0, 0, 0};
 
+    //looping over the solutions and the guesses arrays at the same time and checking for only perfect matches
     for(int i = 0; i < 4; i++){
         if(strcmp(user_guesses[i], solutions[i]) == 0){
+
+            //perfect match found, hence incrementing
             perfect++;
+
+            //marking the other 2 arrays so we dont double count while looking for misplaced matches
             solMatched[i] = 1;
             userMatched[i] = 1;
         }
     }
 
+    //comparing each value of solutions array to each value of the user guesses array
     for(int i = 0; i < 4; i++){
         for(int j = 0; j < 4; j++){
-            if(solMatched[i] != 1 && userMatched[j] != 1 && strcmp(user_guesses[j], solutions[i]) == 0){
+
+            //making the comparision only if the index of both the solutions and guesses are NOT 1 (not marked)
+            if(solMatched[i] == 0 && userMatched[j] == 0 && strcmp(user_guesses[j], solutions[i]) == 0){
+
+                //incrementing on match found
                 misplaced++;
+
+                //marking the indices to avoid double counting
                 solMatched[i] = 1;
                 userMatched[j] = 1;
+                break;
             }
         }
     }
 
-    int score = 1000*perfect + 100*misplaced;
+    //calculating the scores
+    int score = (1000*perfect) + (100*misplaced);
 
+    //replacing the max score if the current score is higher
     if(score > max_score){
         max_score = score;
     }
 
+    //printing the required statements
     printf("With guess %d, you got %d perfect matches and %d misplaced matches.\n", guess_number, perfect, misplaced);
     printf("Your score is %d and current max score is %d.\n", score, max_score);
-}
 
+    //returning 2 if all are perfect matches
+    if(perfect == 4) {
+    	return 2;
+    }
+    
+    //returning 1 as per the instructions
+    return 1;
+}
 

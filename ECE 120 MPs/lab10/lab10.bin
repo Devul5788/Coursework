@@ -1,0 +1,31 @@
+; This is the file you will use for the lab assignment
+; Make sure to comment your code properly and don't exceed 
+; the line limitation for this assignment.  Good luck!
+
+0011 0001 0000 0000 ; x3100 - starting address of the program
+
+; The program description and code starts here
+
+; Devul Nahar, 11/11/20
+; Program will compute the sum of all positive numbers 
+; in a set of 10 2's complement numbers. It does this
+; by looping over the entire set and adding positive
+; integers to R5 and ignoring any negative integers.
+
+; R2 used to point to the number in memory being analyzed
+; R3 used to point to the location of the numbers in memory being analyzed
+; R4 used as a counter which counts from 10 to 0
+; R5 used to store final sum
+
+
+1110 011 000110001    ; R3 <- M[PC+x0031]       put the value \-x31 in R3
+0101 100 100 1 00000  ; R4 <- 0                 clear R4 
+0001 100 100 1 01010  ; R4 <- R4 + 10           add 10 to R4, to initialize it to 10
+0101 101 101 1 00000  ; R5 <- 0                 clear R5
+0110 010 011 000000   ; R2 <- M[R3+x0000]       load number from memory to R2
+0000 110 000000001    ; if nz, PC <- PC+x0001   skip addition if the number is negative or zero
+0001 101 010 0 00101  ; R5 <- R2 + R5           add the positive number to the total sum R5
+0001 011 011 1 00001  ; R3 <- R3 + x0001        increment pointer R3
+0001 100 100 1 11111  ; R4 <- R4 + xFFFF        decrement counter R4, check if > 0
+0000 001 111111010    ; if p, PC <- PC +xFFFB   >0 means more numbers in memory left to add
+1111 0000 00100101    ; TRAP, HALT              stop program

@@ -1,0 +1,20 @@
+Question 1: Describe the errors that occur when trying to assemble lab11.asm. Identify the cause of each error.
+line 14 - missing opcode .ORIG
+line 16 - error occurs because of missing .ORIG opcode in the first line
+line 17 - the memory location for #-1 is incorrect, so I added a label to the correct memory location.
+line 19 - used 2 commas instead of 1
+line 30 - incorrect memory location for 0, so I added a label to the correct memory location.
+line 32 - BRpz should be BRzp
+line 35 - incorrect memory location for X!, so I added a label to the correct memory location.
+line 43 - no .END opcode found
+
+Question 2: For each label in the code, write down the corresponding memory location. 
+OUTERLOOP - x3004
+INNERLOOP - x3005
+INPUT - x300E
+ZERO - X300F
+MINUSONE - x3010
+STOREDRES - x3011
+
+Question 3: Between using labels and explicit memory locations/offsets, which one makes the most sense, and why?
+Using labels makes more sense, as the programmer doesn't have to keep track of specific memory locations in order to understand how the code functions. Furthermore, using labels gives one much flexibility as they don't have to change all the memory addresses if they decided to change /add/edit a line in the middle of the code. Additionally, by using labels we also don't have to keep track of PC or offset as everything is done by the compiler.
