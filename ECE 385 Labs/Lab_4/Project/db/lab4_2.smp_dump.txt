@@ -1,0 +1,11 @@
+
+State Machine - |multiplier|control:Controller|curr_state
+Name curr_state.hold curr_state.shift curr_state.sub curr_state.add curr_state.working curr_state.clear curr_state.print curr_state.input_val 
+curr_state.input_val 0 0 0 0 0 0 0 0 
+curr_state.print 0 0 0 0 0 0 1 1 
+curr_state.clear 0 0 0 0 0 1 0 1 
+curr_state.working 0 0 0 0 1 0 0 1 
+curr_state.add 0 0 0 1 0 0 0 1 
+curr_state.sub 0 0 1 0 0 0 0 1 
+curr_state.shift 0 1 0 0 0 0 0 1 
+curr_state.hold 1 0 0 0 0 0 0 1 

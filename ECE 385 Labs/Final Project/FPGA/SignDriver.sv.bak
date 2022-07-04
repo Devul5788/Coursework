@@ -1,0 +1,10 @@
+module SignDriver (input In0, output logic [6:0] Out0);
+	
+	always_comb begin
+		Out0 = 7'b0000000;
+		if(In0 == 1) begin
+			Out0 = 7'b0111111;
+		end
+	end
+
+endmodule

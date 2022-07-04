@@ -1,0 +1,29 @@
+transcript on
+if {[file exists rtl_work]} {
+	vdel -lib rtl_work -all
+}
+vlib rtl_work
+vmap work rtl_work
+
+vlog -sv -work work +incdir+C:/Users/danahar2/Lab5 {C:/Users/danahar2/Lab5/ISDU.sv}
+vlog -sv -work work +incdir+C:/Users/danahar2/Lab5 {C:/Users/danahar2/Lab5/Mem2IO.sv}
+vlog -sv -work work +incdir+C:/Users/danahar2/Lab5 {C:/Users/danahar2/Lab5/SLC3_2.sv}
+vlog -sv -work work +incdir+C:/Users/danahar2/Lab5 {C:/Users/danahar2/Lab5/Synchronizer.sv}
+vlog -sv -work work +incdir+C:/Users/danahar2/Lab5 {C:/Users/danahar2/Lab5/test_memory.sv}
+vlog -sv -work work +incdir+C:/Users/danahar2/Lab5 {C:/Users/danahar2/Lab5/HexDriver.sv}
+vlog -sv -work work +incdir+C:/Users/danahar2/Lab5 {C:/Users/danahar2/Lab5/Reg16.sv}
+vlog -sv -work work +incdir+C:/Users/danahar2/Lab5 {C:/Users/danahar2/Lab5/datapath.sv}
+vlog -sv -work work +incdir+C:/Users/danahar2/Lab5 {C:/Users/danahar2/Lab5/Reg3.sv}
+vlog -sv -work work +incdir+C:/Users/danahar2/Lab5 {C:/Users/danahar2/Lab5/Reg1.sv}
+vlog -sv -work work +incdir+C:/Users/danahar2/Lab5 {C:/Users/danahar2/Lab5/memory_contents.sv}
+vlog -sv -work work +incdir+C:/Users/danahar2/Lab5 {C:/Users/danahar2/Lab5/slc3.sv}
+vlog -sv -work work +incdir+C:/Users/danahar2/Lab5 {C:/Users/danahar2/Lab5/slc3_testtop.sv}
+
+vlog -sv -work work +incdir+C:/Users/danahar2/Lab5 {C:/Users/danahar2/Lab5/test_bench_2.sv}
+
+vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L fiftyfivenm_ver -L rtl_work -L work -voptargs="+acc"  test_bench_2
+
+add wave *
+view structure
+view signals
+run 1000 ns

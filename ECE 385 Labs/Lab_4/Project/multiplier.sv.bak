@@ -1,0 +1,52 @@
+module multiplier (
+	input logic [7:0] SW,
+	input logic Clk, Reset_Load_Clear, Run,
+	output logic [6:0] HEX0, HEX1, HEX2, HEX3,
+	output logic [7:0] Aval, Bval,
+	output logic Xval);
+
+	logic shift_s, add_s, sub_s, clr_ld_s, a_out;
+	logic Reset_H, load_AX, Run_H;
+	logic [7:0] A, B;
+	logic [8:0] sum9;
+	logic X;
+	
+	assign Reset_H = ~Reset_Load_Clear;
+	assign Run_H = ~Run;
+	
+	control Controller (.clk(Clk), .Reset_Load_Clear(Reset_H), .Run(Run_H), .M(B[0]), .shift_s(shift_s), .sub_s(sub_s), .clr_ld_s(clr_ld_s), .load_AX(load_AX));
+	
+	reg8 RegA(.Clk(Clk), .Reset(Reset_Load_Clear), .Shift_In(X), .Load(load_AX), .Shift_En(shift_s), .D(sum9[7:0]), .Shift_Out(a_out), .Data_Out(A));
+	reg8 RegB(.Clk(Clk), .Reset(0), .Shift_In(a_out), .Load(Reset_Load_Clear), .Shift_En(shift_s), .D(SW), .Shift_Out(), .Data_Out(B));
+	
+	logic a_new, c_in;
+
+	adder9 adder(.A(a_new), .B(SW), .cin(c_in), .S(sum9));
+	
+	always_comb 
+	begin
+		sub_s = 0;
+		load_AX = 0;
+		clr_ld_s = 0;
+		if (sub_s == 1) begin
+			assign a_new = ~SW;
+			assign c_in = 1;
+		end
+	
+		if (clr_ld_s == 1)
+			X = 1'b0;
+		else if (load_AX)
+			X = sum9[8];
+	end
+	
+	assign Aval = A;
+	assign Bval = B;
+	assign Xval = X;		
+	
+	HexDriver AhexL(.In0(A[3:0]), .Out0(HEX0));
+	HexDriver AhexU(.In0(A[7:4]), .Out0(HEX1));
+	HexDriver BhexL(.In0(B[3:0]), .Out0(HEX2));
+	HexDriver BhexU(.In0(B[7:4]), .Out0(HEX3));
+	
+endmodule
+	

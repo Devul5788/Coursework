@@ -1,0 +1,70 @@
+module datapath (
+		input logic LD_MAR, 
+						LD_MDR,
+						LD_IR, 
+//						LD_BEN, 
+//						LD_CC, 
+//						LD_REG, 
+						LD_PC, 
+//						LD_LED,
+		
+						GatePC,
+						GateMDR,
+//						GateALU,
+//						GateMARMUX,
+		 
+		input logic [1:0] PCMUX,
+//								ALUK,
+//		input logic DRMUX,
+//						SR1MUX,
+//						SR2MUX,
+//						ADDR1MUX,
+//		input logic [1:0] ADDR2MUX,
+		input logic Mem_OE,
+//						Mem_WE,
+//						MIO_EN,
+						Reset,
+		input logic Clk,
+		
+		input logic [15:0] MDR_In, 
+		
+		output [15:0] IR,
+						  MAR,
+						  MDR
+);
+
+//Global wires
+
+//Main wire
+logic [15:0] BUS;
+
+//other wires
+
+//temp wires
+logic MIOEN;
+logic [15:0] MDR_DATA_FROM_MUX, PC_DATA_FROM_MUX, PC_DATA;
+
+
+reg_16 PC_REG(.Clk(Clk), .Reset(Reset), .Load(LD_PC), .D(PC_DATA_FROM_MUX), .Data_Out(PC_DATA));
+reg_16 MAR_REG(.Clk(Clk), .Reset(Reset), .Load(LD_MAR), .D(BUS), .Data_Out(MAR));
+reg_16 MDR_REG(.Clk(Clk), .Reset(Reset), .Load(LD_MDR), .D(MDR_DATA_FROM_MUX), .Data_Out(MDR));
+reg_16 IR_REG(.Clk(Clk), .Reset(Reset), .Load(LD_IR), .D(BUS), .Data_Out(IR));
+
+always_comb begin
+	if (Mem_OE == 1) begin
+		MDR_DATA_FROM_MUX = MDR_In;
+	end else if (GateMDR == 1) begin
+			BUS = MDR_DATA_FROM_MUX;
+	end
+	
+	if (PCMUX == 2'b00) begin
+		PC_DATA_FROM_MUX = PC_DATA + 1;
+	end
+	
+	if (GatePC == 1) begin
+		BUS = PC_DATA;
+	end
+end
+
+
+endmodule

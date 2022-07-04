@@ -1,0 +1,84 @@
+module control (input logic Clk, Reset_Load_Clear, Run, M,
+					  output logic shift_s, sub_s, clr_ld_s, load_AX);
+
+    enum logic [2:0] {clear_and_input, working, add, sub, shift, waitt}   curr_state, next_state; 
+
+    always_ff @ (posedge Clk)  
+    begin
+        if (Reset_Load_Clear)
+            curr_state <= clear_and_input;
+        else 
+            curr_state <= next_state;
+    end
+	 
+	 logic my_shift;
+	 logic [2:0] my_count;
+	 
+	 counter my_counter(.clk(Clk), .shift(my_shift), .count(my_count));
+
+	always_comb
+    begin
+		  next_state  = curr_state;
+        unique case (curr_state) 
+				
+				clear_and_input : if(Run == 0)
+											curr_state = clear_and_input;
+										else if (Run == 1)
+											curr_state = working;
+				working 			 : if (M == 1 & my_count != 3'b111)
+											curr_state = add;
+										else if (M == 1 & my_count == 3'b111)
+											curr_state = sub;
+										else if (M == 0)
+											curr_state = shift;
+				add				 : curr_state = shift;
+				sub				 : curr_state = shift;
+				shift				 : if (my_count == 3'b000)
+											curr_state = waitt;
+										else 
+											curr_state = working;
+				waitt				 : if (Reset_Load_Clear == 0)
+											curr_state = waitt;
+										else
+											curr_state = clear_and_input;
+							  
+        endcase
+   
+        case (curr_state) 
+	   	   clear_and_input: 
+	         begin
+                clr_ld_s = Reset_Load_Clear;
+					 my_shift = 0;
+					 sub_s = 0;
+					 shift_s = 0;
+					 load_AX = 0;
+		      end
+				
+	   	   add:
+		      begin
+					 my_shift = 0;
+					 sub_s = 0;
+					 clr_ld_s = 0;
+					 shift_s = 0;
+					 load_AX = 1;
+		      end
+				
+				shift:
+				begin
+					shift_s = 1;
+					my_shift = 1;
+					sub_s = 0;
+					clr_ld_s = 0;
+					load_AX = 0;
+				end
+				
+	   	   default:
+		      begin 
+                my_shift = 0;
+					 shift_s = 0;
+					 load_AX = 0;
+		      end
+        endcase
+    end
+
+endmodule
