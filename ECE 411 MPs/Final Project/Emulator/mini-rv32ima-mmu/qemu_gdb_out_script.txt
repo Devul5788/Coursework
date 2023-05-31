@@ -1,0 +1,27 @@
+set logging file /home/devul/ece411/mini-rv32ima_mmu/out.txt
+set logging overwrite
+set logging redirect
+set logging on
+show logging
+b *0x80000000
+c
+set logging off
+
+cd /ece411/mini-rv32ima_mmu/buildroot/output/build/linux-6.1.14
+gdb-multiarch -nx ./vmlinux
+target remote localhost:1234
+b *0x80000000
+c
+set logging file /home/devul/ece411/mini-rv32ima_mmu/mini-rv32ima/qemu_out.txt
+set logging overwrite
+set logging redirect
+set logging on
+set $i = 0
+while ($i < 500000)
+printf "rt: %ld\n", $i
+info registers
+stepi
+printf "\n"
+set $i = $i + 1
+end
+set logging off
