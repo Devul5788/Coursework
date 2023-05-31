@@ -1,0 +1,56 @@
+ECE 391 MP2 Bug Log
+
+**checkpoint1**
+draing vertical line:
+- Symptom: The screen was wrapping around
+- Difficulty: It took around 20 minutes and assistance of TA
+- Solution: I was trying to implement the equation from the slides but later I
+realized that I did not need to do that, as it was already implemented.
+
+Making status bar black:
+- Symptom: Nothing changed at the bottom of the screen, even though I
+changed multiple register values
+- Difficulty: Difficult I had to sit and read through the documentation multiple times
+- Solution: Changed the start address of target image. 
+
+status bar coloring:
+- Symptom: Seg fault
+- Difficulty: Medium, took 2 hours to debug and fixed using TA's assistance
+- Solution: a seperate copy_image for status bar must be implemented. 
+
+Printing a character on the screen:
+- Symptom: Saw a random blob on the screen
+- Difficulty: 1 hours to debug
+- Solution: was doing a logical and instead of a bitwise and
+
+Adding underscore to user input:
+- Symptom: underscore printing outside of bounds
+- Difficulty: 3 minutes of debugging work
+- Solution: I created a pointer of character array by mistake. Removed the pointer and it worked.
+
+**checkpoint2**
+Using the octree palette to show colors:
+- Symptom: I was getting colors all over the place
+- Difficulty: 2 hours of debugging
+- Solution: I was adding to the palette at the 65th position.
+
+Displaying image:
+- Symptom: I was getting a blue tinge everywhere
+- Difficulty: 2 hours of debugging
+- Solution: I was not shifting one of the bits to display the image properly
+
+Tux buttons:
+- Symptom: Buttons not having any difference on the screen 
+- Difficulty: 1 hours of debugging
+- Solution: I was not doing copy to user
+
+Hex displays:
+- Symptom: F was showing up as E
+- Difficulty: 15 minutes of debugging
+- Solution: I redid the mapping and got the currect result
+
+Tux and keyboard not working together:
+- Symptom: Either only tux buttons or keyboard buttons were working
+- Difficulty: 4 hours of debugging
+- Solution: Bot the keyboard and the tux are fighting to change the screen. Its a race condition. 
+-           Thus we must give priority to either the tux or the keyboard.

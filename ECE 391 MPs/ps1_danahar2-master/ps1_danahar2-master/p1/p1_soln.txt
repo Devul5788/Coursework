@@ -1,0 +1,9 @@
+answer 1: p/x solution
+
+answer 2: x/2xh $sp
+
+answer 3: info registers
+
+answer 4: b ece.c:391
+
+answer 5: target remote 10.0.2.2:1234 for test_debug. test_(no)debug does not support gdb.

@@ -1,0 +1,15 @@
+Cite sources you conslulted for this MP here:
+
+https://www.w3schools.com/sql/sql_create_table.asp
+https://stackoverflow.com/questions/4005409/error-1046-no-database-selected-how-to-resolve
+https://blog.devart.com/mysql-int-data-type.html
+https://www.w3schools.com/sql/sql_ref_create_unique_index.asp
+https://www.w3schools.com/sql/sql_syntax.asp
+
+https://pymysql.readthedocs.io/en/latest/user/examples.html
+https://www.geeksforgeeks.org/fetch-in-sql/
+
+https://pynative.com/python-regex-replace-re-sub/
+https://docs.python.org/3/library/binascii.html
+https://stackoverflow.com/questions/31354485/how-to-generate-16-bytes-random-number-in-python-and-xor-them#:~:text=generating%20random%20bytes%3A,will%20output%2016%20random%20bytes.
+https://stackoverflow.com/questions/30294451/setting-cookies-for-static-files-using-bottle-py

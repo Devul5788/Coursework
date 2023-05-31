@@ -1,0 +1,226 @@
+<script>
+    var login = document.querySelectorAll(".header-item");
+    login[5].innerHTML = `<a class="link" href="/logout">Logout</a>`;
+</script>
+
+<style>
+    .heading {
+        padding: 30px;
+        padding-bottom: 0;
+        text-align: center;
+    }
+    .heading-text {
+        font-size: 50px;
+        font-weight: 600;
+        color: black;
+        padding: 10px 20px;
+    }
+    .stats-section {
+        display: flex;
+        flex-flow: row;
+        padding-bottom: 30px;
+        padding: 20px;
+    }
+    .stats-box {
+        flex-grow: 1;
+        text-align: center;
+        margin: 5px;
+        border: 1px solid black;
+        width: 100px;
+        border-radius: 10px 10px 0 0;
+    }
+    .stats-count {
+        padding: 40px 10px;
+        font-size: 25px;
+    }
+    .stats-name {
+        padding: 10px 10px;
+        color: white;
+        background-color: black;
+    }
+    .num-songs-section {
+        padding: 20px;
+        text-align: center;
+        font-size: 25px;
+        background-color: black;
+        color: white;
+        text-transform: uppercase;
+    }
+    .query-section {
+        padding: 30px;
+        padding-bottom: 0;
+        text-align: center;
+    }
+    .query-table-section {
+        padding: 20px;
+        text-align: center;
+    }
+    .query-table {
+        border-collapse: collapse;
+        margin: auto;
+    }
+    .query-table th {
+        font-weight: bold;
+        text-decoration: underline;
+    }
+    .query-table td {
+        min-width: 20vw;
+    }
+    .query-table td, .query-table th {
+        border: 1px solid black;
+        padding: 8px;
+    }
+    .text {
+        padding: 10px 20px;
+        font-size: 25px;
+        border-radius: 20px;
+    }
+    .space {
+        margin: 100px;
+    }
+</style>
+
+<div class="heading">
+    <span class="heading-text">
+        INSIGHTS
+    </span>
+</div>
+
+<div class="stats-section">
+    <div class="stats-box">
+        <div class="stats-count">
+            <%= Math.round(userInsights.avg_liveness * 100) %>% 
+        </div>
+        <div class="stats-name">
+            Liveliness
+        </div>
+    </div>
+    <div class="stats-box">
+        <div class="stats-count">
+            <%= Math.round(userInsights.avg_acousticness * 100) %>% 
+        </div>
+        <div class="stats-name">
+            Acousticness
+        </div>
+    </div>
+    <div class="stats-box">
+        <div class="stats-count"> 
+            <%= Math.round(userInsights.avg_danceability * 100) %>%
+        </div>
+        <div class="stats-name">
+            Danceability
+        </div>
+    </div>
+    <div class="stats-box">
+        <div class="stats-count">
+            <%= (userInsights.avg_seconds) %>
+        </div>
+        <div class="stats-name">
+            Avg. Seconds
+        </div>
+    </div>
+    <div class="stats-box">
+        <div class="stats-count">
+            <%= Math.round(userInsights.avg_energy * 100) %>%
+        </div>
+        <div class="stats-name">
+            Energy
+        </div>
+    </div>
+    <div class="stats-box">
+        <div class="stats-count">
+            <%= Math.round(userInsights.avg_instrumentalness * 100) %>%
+        </div>
+        <div class="stats-name">
+            Instruments
+        </div>
+    </div>
+    <div class="stats-box">
+        <div class="stats-count">
+            <%= userInsights.avg_loudness %> dB
+        </div>
+        <div class="stats-name">
+            Loudness
+        </div>
+    </div>
+    <div class="stats-box">
+        <div class="stats-count">
+            <%= Math.round((userInsights.avg_speechiness * 6) * 100) %>%
+        </div>
+        <div class="stats-name">
+            Lyrical
+        </div>
+    </div>
+    <div class="stats-box">
+        <div class="stats-count">
+            <%= userInsights.avg_tempo %>
+        </div>
+        <div class="stats-name">
+            Beats/Minute
+        </div>
+    </div>
+</div>
+
+<div class="num-songs-section">
+    Based on <span style="text-decoration: underline;"><%= userInsights.num_songs %></span> songs!
+</div>
+
+<div class="query-section">
+    <div class="query-text">
+        <span class="text">Top 10 Artists with Highest Energy (All Users)</span>
+    </div>
+    <div class="query-table-section">
+        <table class="query-table">
+            <tr>
+                <th>
+                    Artist Name
+                </th>
+                <th>
+                    Avg. Energy (out of 100)
+                </th>
+            </tr>
+        <% for( let index = 0; index < aq3.length; index++ ) { %>
+            <tr>
+                <td>
+                    <%= aq3[index].artist_name %> 
+                </td>
+                <td>
+                    <%= aq3[index].avg_energy * 100 %> 
+                </td>
+            </tr>
+        <% } %>
+        </table>
+    </div>
+</div>
+
+<div class="query-section">
+    <div class="query-text">
+        <span class="text">Pop Artists with Most Explicit Songs (All Users)</span>
+    </div>
+    <div class="query-table-section">
+        <table class="query-table">
+            <tr>
+                <th>
+                    Artist Name
+                </th>
+                <th>
+                    Number of Tracks
+                </th>
+            </tr>
+        <% for( let index = 0; index < aq2.length; index++ ) { %>
+            <tr>
+                <td>
+                    <%= aq2[index].artist_name %> 
+                </td>
+                <td>
+                    <%= aq2[index].explicit_count %> 
+                </td>
+            </tr>
+        <% } %>
+        </table>
+    </div>
+</div>
+
+<div class="space">
+
+</div>

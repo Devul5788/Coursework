@@ -1,0 +1,136 @@
+ECE 391 MP3 Bug Log
+
+Checkpoint 3.1
+
+GDT not working:
+- Symptom: gdt not working after writing code for GDT and IDT, boot loop
+- Difficulty: hard, 4-5 hours
+- Solution: created a new gdt_desc pointer instead of using the originally defined
+gdt_desc that was originally declared somewhere else
+
+IDT writing:
+- Symptom: IDT was not working, compiler error
+- Difficulty: not hard, 30 mins
+- Solution: the second parameter of SET_IDT should not have parentheses, 
+because it is just a string
+
+IDT:
+- Symptom: IDT was not working, boot loop on exception call
+- Difficulty: 2-3 hours
+- Solution: set present to 0 for values greater than 20, 1 for < 20 because
+that is the correct exception. Set everything to interrupt gate and ignored 
+reserve4 value
+
+Paging:
+- Symptom: pg disabled
+- Difficulty: 2-3 hours
+- Solution: cr4 needs to be initialized before enabling paging in cr0
+
+Paging kernel memory:
+- Symptom: Incorrect kernel mem location, going into boot loop
+- Difficulty: 1-2 hours
+- Solution: kernel memory location is at 4MB = 1024 * 1024 * 4, should 
+be shifted by 12 bits before putting into PDE
+
+Keyboard:
+- Symptom: When testing keyboard, key up also registered, causing doubele press
+- Difficulty: 1-2 hours
+- Solution: checked whether scancode within bounds, masking key up scancodes
+
+Keyboard (General Bug):
+- Symptom: globally defined variable i was not being updated, causing us to think
+keyboard is not being pressed > once
+- Difficulty: medium, 45 minutes
+- Solution: named variable differently becuase i value re-initialized
+
+PIC:
+- Symptom: RTC was not wokring properly, not cycling correctly
+- Difficulty: hard, 4-5 hours
+- Solution: We did not initialize master PIC in the case when slave was being
+serviced, added the condition.
+
+RTC:
+- Symptom: RTC compiling but test_interrupts not working
+- Difficulty: medium, 2-3 hours
+- Solution: We messed up the ordering of arguments in outb, 
+different from OSDEV
+
+RTC:
+- Symptom: RTC compiling but test_interrupts not working
+- Difficulty: easy, 45 minute
+- Solution: Used the wrong port, 0x0C instead of 0x8C
+
+File-system:
+- Symptom: page fault 
+- Difficulty: hard, 45 minute
+- Solution: defined pointer without initialising to an actual object
+
+File-system:
+- Symptom: -1>2
+- Difficulty: super hard, 45 minute
+- Solution: don't use uint with negative numbers in if statement
+
+RTC:
+- Symptom: The read/write test case was not working
+- Difficulty: medium, 30 minutes
+- Solution: forgot to set the flag back to 0 in the read function
+
+Keyboard:
+- Symptom: Memcopy was not working 
+- Difficulty: hard, 1 hour
+- Solution: I had to use memmove instead
+
+Terminal:
+- Symptom: terminal write wasn't working. only 1 line being printed
+- Difficulty: easy, 5 minutes
+- Solution: we needed to do mod by 80
+
+Execute:
+- Symptom: Page Fault on calling 
+- Difficulty: hard, 4 hours
+- Solution: we did not update the current_pid while creating a new File
+
+Execute:
+- Symptom: Page Fault on calling execute
+- Difficulty: hard, 3 hours
+- Solution: Did not setup linkage correctly, needed to update program_eip with bits 24-27 of file
+
+ls:
+- Symptom: Not printing files
+- Difficulty: medium, 2 hours
+- Solution: We did not implement directory read correctly, needed to add filenames to buffer
+
+Halt:
+- Symptom: Failing on some syserror test cases
+- Difficulty: medium, 2 hours
+- Solution: Did not set curr_pid = parent_pid when exiting
+
+Get_Args:
+- Symptom: Page Faulting after opening file
+- Difficulty: medium, 2 hours
+- Solution: Because we did not keep track of the number of bytes read in read_data
+
+Vid_Map:
+- Symptom: Passing syserror but fish not working
+- Difficulty: hard, 3 hours
+- Solution: We did not set the page directory entry for the new vidmap page
+
+Scheduling:
+-Symptom : Page Fault in Halt
+-Difficulty: Hard 45 hours
+-Solution : Current ebp,esp by pit is different from the ebp,esp used when the process was first executed and halt needs that base ebp,esp 
+
+Scheduling:
+-Symptom : Page Fault Randomly
+-Difficulty: Medium 25 hours
+-Solution : tss.esp0 is base of kernel stack of the user program and not the current esp value
+
+Scheduling:
+-Symptom : Printing in random pages
+-Difficulty: Easy 65 hours 
+-Solution : Mantain different putc functions for keyboard and terminal_write and do paging correctly so that putc writes according to pit and keyboard writes according to visible screen
+
+Scheduling:
+-Symptom : Problems in execute when PIT interrupted in middle of execution
+-Difficulty: Hard 12 hours
+-Solution : Synchronize System Calls and other uninterruptable code 
