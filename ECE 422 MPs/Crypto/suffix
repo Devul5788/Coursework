@@ -1,0 +1,9 @@
+
+"""
+from hashlib import sha256
+shaval = sha256(blob.encode()).hexdigest()
+print(shaval)
+if (shaval == "ae31450618cee68d8de80fdbdc5a70d417319a3743e6622523f10c0a5a75f5b8"):
+    print("I come in peace.")
+else:
+    print("Prepare to be destroyed!")
