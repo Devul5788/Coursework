@@ -1,0 +1,73 @@
+* =bitbangers= README
+
+** Style Guidelines
+*** Directory Structure
+[DOC_TD]
+
+*** Verilog
+We mostly follow [[https://github.com/lowRISC/style-guides/blob/master/VerilogCodingStyle.md][these guidelines]], sometimes slightly bending the
+rules (no tabular indentation for module instantiation, comment syntax
+is more flexible, no =_e= for enumerated types, no =_t= for
+=typedef='s, no UpperCamelCase in general is all OK).
+
+The following snippets illustrate the Verilog coding guidelines if you
+don't feel like reading that entire article (though you really
+should...)
+
+**** Module Declarations
+#+begin_src verilog
+  module dut
+  import package::*;
+      (
+          input              clk,
+          input              rst,
+
+          input tdef_logic   inp1,
+          input [4:0]        inp2,
+
+          output logic [3:0] a,
+          output logic       b
+      );
+
+
+  endmodule
+#+end_src
+
+**** Blocks
+#+begin_src verilog
+  always_comb begin : q
+      // Defaults, if required.
+      a = '0;
+      b = 1'b1;
+      if (inp1 == 1'b1) a = 4'h1; // If no begin/end, must be on same line.
+      if (inp2 == 4'ha) begin
+          a = 4'hb;
+      end else begin
+          a = 4'hc;
+          b = 1'b0;
+      end
+  end : q
+#+end_src
+
+**** Module Instantiation
+Do not use =.*=. Do not use positional arguments to connect signals to
+ports. Instantiate ports in the same order as they are defined in the
+module.
+
+
+**** Comments
+[DOC_TD]
+
+*** Markers in Code
+Do not use the keyword "TODO" (or any lowercase variation) unless
+without the fix, the design fails to meet the spec. This is to make
+searching easier using =grep -r "TODO"=. It is encouraged to add
+the feature or checkpoint that the TODO corresponds to in square
+brackets, for instance, =[CP2]=.
+
+| Marker   | Meaning                                         |
+|----------+-------------------------------------------------|
+| TODO     | To fix, the design is *incorrect* if not fixed. |
+| DOC_TD   | Needs further documentation.                    |
+| SYNTH_TD | May need to be fixed for correct synthesis.     |
+| PERF_TD  | May need to be fixed for better performance.    |

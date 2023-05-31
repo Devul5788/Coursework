@@ -1,0 +1,46 @@
+* CP2
+- Forwarding unit =always_comb= priority:
+  #+begin_src verilog
+        /* An interesting note here is that this always_comb block
+         sets up a priority. Consider the case where both the
+         antepenultimate and the penultimate instruction tried to
+         modify the same register, say x4. The instruction sequence
+         looks like:
+
+         # ...
+         addi x4, x0, 5  # In stage WB (antepenultimate instruction)
+         addi x4, x4, 5  # In stage MEM (penultimate instruction)
+         add x5, x4, x0  # In stage EX (current instruction)
+         # ...
+
+         Where should we forward x4 from? The MEM stage or the WB stage?
+         Both the EX/MEM and MEM/WB registers hold some version of x4.
+         Naturally, we want the one that occurred later in time, i.e.,
+         we want the value that was set by the penultimate instruction,
+         so we would like the value from the MEM stage.
+
+         This always_comb block implements that priority using the
+         Verilog guaruntee that the last value set is the one that
+         sticks (this is from the section on Determinism in the LRM
+         IIRC). So in the case where both MEM's rd_idx and WB's rd_idx
+         match, we'll use MEM's.
+
+         This is also a good check of whether RVFI is working -- simply
+         swap the two if statements above and run ASM that looks like
+         the snippet above. It should throw some errors about wrong
+         shadow registers or wrong wb_data.
+        */
+  #+end_src
+
+- Critical path: forwarded value for a branch instruction: goes
+  from the read register index of =mem_wb=, through the forwarding
+  unit, through the ALU, back to =if_stage=, then through a MUX for
+  the PC, to the PC.
+
+
+* Optimizaitons
+
+- It may be better to change the ALU to simply have PASS_A and PASS_B
+  as operations as opposed to all the extra MUXes and control signals
+  required to use =zero_imm= with =alu_add=, especially in the case of
+  Zicsr.

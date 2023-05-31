@@ -1,0 +1,8 @@
+**/.o
+**/.out
+**/.vscode
+**/sim
+**/synth
+**/verdi
+**/.DS_Store
+autogen_*
