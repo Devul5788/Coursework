@@ -1,0 +1,225 @@
+<style>
+    .message {
+        background-color: red;
+        border: 30px;
+        color: white;
+        padding: 10px 30px 10px 30px;
+        text-align: center;
+    }
+    .dashboard-wrapper {
+        padding: 70px 100px 30px 100px;
+        display: flex;
+        flex-direction: row;
+    }
+    .image {
+        flex-grow: 1;
+        text-align: right;
+        padding-right: 40px;
+    }
+    .display-image {
+        border-radius: 10px;
+    }
+    .info {
+        flex-grow: 1;
+        font-family: 'Montserrat';
+        font-weight: 600;
+    }
+    .welcome {
+        font-size: 100px;
+    }
+    .region {
+        font-size: 30px;
+    }
+    .controls-section {
+        padding: 0 100px 0px 100px;
+        margin-bottom: 30px;
+    }
+    .controls-section-heading {
+        padding: 10px 0px;
+        font-size: 30px;
+        border-bottom: 1px solid black;
+    }
+    .controls-section-body {
+        padding: 20px 0px;
+    }
+    .alert-button {
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-size: 20px;
+        box-shadow: none;
+        background-color: white;
+        border: 1px solid red;
+        color: red;
+    }
+    .alert-button:hover {
+        background-color: red;
+        border: 1px solid red;
+        color: white;
+    }
+    .fetch-button {
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-size: 20px;
+        box-shadow: none;
+        background-color: white;
+        border: 1px solid green;
+        color: green;
+    }
+    .fetch-button:hover {
+        background-color: green;
+        border: 1px solid green;
+        color: white;
+    }
+    .normal-button {
+        border-radius: 10px;
+        padding: 5px 10px;
+        font-size: 15px;
+        box-shadow: none;
+        background-color: white;
+        border: 1px solid black;
+        color: black;
+    }
+    .normal-button:hover {
+        background-color: black;
+        border: 1px solid black;
+        color: white;
+    }
+    #user-name {
+        padding: 5px 10px;
+        font-size: 15px;
+        border-radius: 10px;
+        border: 1px solid black;
+    }
+    #user-name:focus {
+        outline: none;
+    }
+    .pass {
+        margin-left: 20px;
+        padding: 5px 10px;
+        border-radius: 10px;
+        background-color: orange;
+        color: white;
+        display: none;
+    }
+    .spacer {
+        margin: 100px;
+    }
+</style>
+
+<script>
+    var login = document.querySelectorAll(".header-item");
+    login[5].innerHTML = `<a class="link" href="/logout">Logout</a>`;
+</script>
+
+<div class="message" style="display: <%= msg ? 'block' : 'none' %>;">
+    Please click fetch data before proceeding to insights!
+</div>
+
+<div class="dashboard-wrapper">
+    <div class="image">
+        <img class="display-image" src="<%= userPhoto %>" height="300">
+    </div>
+    <div class="info">
+        <span class="welcome">Welcome back, <%= userName %>!</span><br>
+        <span class="region">Your region is set to <%= userData.country %>.</span><br>
+    </div>
+</div>
+
+<div class="controls-section">
+    <div class="controls-section-heading">
+        Start fetching your data? 
+    </div>
+    <div class="controls-section-body">
+        <button class="fetch-button" onclick="fetchDataAction()">Fetch my data!</button>
+        <span class="pass" id="pass"></span>
+    </div>
+</div>
+
+<div class="controls-section">
+    <div class="controls-section-heading">
+        Your share code is...
+    </div>
+    <div class="controls-section-body" style="font-size: 20px;">
+        <%= shareCode %> 
+    </div>
+</div>
+
+<div class="controls-section">
+    <div class="controls-section-heading">
+        Update your display name?
+    </div>
+    <div class="controls-section-body">
+        <form>
+            <input type="text" name="user-name" id="user-name" value="<%= userName %>">
+            <input type="submit" value="Change!" class="normal-button" id="name-submit-button">
+        </form>
+    </div>
+</div>
+
+<div class="controls-section">
+    <div class="controls-section-heading">
+        Delete your profile?
+    </div>
+    <div class="controls-section-body">
+        <button class="alert-button" onclick="triggerAction()">Delete Profile</button>
+    </div>
+</div>
+
+<div class="spacer"></div>
+
+<script>
+    var form = document.querySelector("#name-submit-button");
+    var inputField = document.querySelector("#user-name");
+    form.addEventListener('click', handleNameForm);
+
+    function handleNameForm(e) {
+        e.preventDefault();
+        var data = inputField.value;
+        var newData = data.trim();
+        if(newData == "") return;
+
+        console.log("starting update...");
+        var queryParams = {
+            'action' : 'update_user',
+            'payload' : newData
+        };
+
+        var q = '/ajax?' + new URLSearchParams(queryParams).toString();
+        console.log(q);
+        fetch(q)
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data);
+            if(data.status == "pass") window.location.href = "/dashboard";
+            else alert("Something went wrong!");
+        });
+    }
+
+    function triggerAction() {
+        console.log("starting delete...");
+        fetch('/ajax?action=delete_user')
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data);
+            if(data.status == "pass") window.location.href = "/logout";
+            else alert("Something went wrong!");
+        });
+    }
+
+    function fetchDataAction() {
+        console.log("starting fetch...");
+        document.querySelector("#pass").style.display = 'inline-block';
+        document.querySelector("#pass").innerHTML = `Fetching your data...`;
+        fetch('/ajax?action=fetch_user')
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data);
+            if(data.status == "pass") {
+                console.log("Got it!");
+                document.querySelector("#pass").style.display = 'inline-block';
+                document.querySelector("#pass").innerHTML = `Got your data!`;
+            } else alert("Something went wrong!");
+        });
+    }
+
+</script>
